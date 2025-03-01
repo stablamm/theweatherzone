@@ -3,17 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { NWSPointResponse } from './interfaces/nws-point-response.model';
 import { NWSForecastResponse } from './interfaces/nws-forecast-response.model';
+import { WeatherDataService } from './weather-data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NwsApiService {
   private baseUrl = 'https://api.weather.gov';
-  private _response = new BehaviorSubject<NWSPointResponse | null>(null);
-  public response$ = this._response.asObservable();
-
-  private _forecastResponse = new BehaviorSubject<NWSForecastResponse | null>(null);
-  public forecastResponse$ = this._forecastResponse.asObservable();
+  private _pointResponse = new BehaviorSubject<NWSPointResponse | null>(null);
+  public pointResponse$ = this._pointResponse.asObservable();
 
   getPoint(lat: string, lon: string): Observable<NWSPointResponse> {
     var url = `${this.baseUrl}/points/${lat},${lon}`;
@@ -28,11 +26,11 @@ export class NwsApiService {
     console.log(`Lat: ${lat}, Lon: ${lon}`);
     this.getPoint(lat, lon).subscribe({
       next: (result: NWSPointResponse) => {
-        this._response.next(result);
+        this._pointResponse.next(result);
       },
       error: (error: any) => {
         console.error('Error fetching coordinates: ', error);
-        this._response.next(null);
+        this._pointResponse.next(null);
       }
     });
   }
@@ -40,14 +38,13 @@ export class NwsApiService {
   fetchForecast(url: string): void {
     this.getForecast(url).subscribe({
       next: (result: NWSForecastResponse) => {
-        this._forecastResponse.next(result);
+        this.weatherDataService.setForecast(result);
       },
       error: (error: any) => {
         console.error('Error fetching forecast: ', error);
-        this._forecastResponse.next(null);
       }
     });
   }
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private weatherDataService: WeatherDataService) { }
 }

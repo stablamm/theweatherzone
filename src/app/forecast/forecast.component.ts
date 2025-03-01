@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { WeatherDataService, Coordinates } from '../weather-data.service';
+import { WeatherDataService } from '../weather-data.service';
 import { NwsApiService } from '../nwsapi.service';
 import { NWSPointResponse } from '../interfaces/nws-point-response.model';
 import { NWSForecastResponse } from '../interfaces/nws-forecast-response.model';
+import { Coordinates } from '../interfaces/coordinates.model';
 
 @Component({
   selector: 'app-forecast',
@@ -26,7 +27,11 @@ export class ForecastComponent implements OnInit {
       this.coordinates = coords;
     });
 
-    this.nwsApiService.response$.subscribe((point) => {
+    this.weatherDataService.forecast$.subscribe((forecast) => {
+      this.forecastResponse = forecast
+    });
+
+    this.nwsApiService.pointResponse$.subscribe((point) => {
       this.pointResponse = point;
       this.forecastUrl = point?.properties.forecast ?? '';
 
@@ -34,9 +39,5 @@ export class ForecastComponent implements OnInit {
         this.nwsApiService.fetchForecast(this.forecastUrl);
       }
     });
-
-    this.nwsApiService.forecastResponse$.subscribe((forecast) => {
-      this.forecastResponse = forecast;
-    })
   }
 }

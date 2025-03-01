@@ -2,9 +2,6 @@
     <h2>Weather Forecast</h2>
     
     <div *ngIf="coordinates; else noData">
-      <p>Latitude: {{ coordinates.lat }}</p>
-      <p>Longitude: {{ coordinates.lon }}</p>
-
       <div *ngIf="forecastResponse; else noForecast">
         <table class="forecast-table">
           <thead>
