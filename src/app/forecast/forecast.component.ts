@@ -4,6 +4,7 @@ import { NwsApiService } from '../nwsapi.service';
 import { NWSPointResponse } from '../interfaces/nws-point-response.model';
 import { NWSForecastResponse } from '../interfaces/nws-forecast-response.model';
 import { Coordinates } from '../interfaces/coordinates.model';
+import { filter, Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-forecast',
@@ -12,32 +13,21 @@ import { Coordinates } from '../interfaces/coordinates.model';
   styleUrls: ['./forecast.component.css']
 })
 export class ForecastComponent implements OnInit {
-  coordinates: Coordinates | null = null;
-  pointResponse: NWSPointResponse | null = null;
-  forecastUrl: string | null = null;
-  forecastResponse: NWSForecastResponse | null = null;
+  coordinates$: Observable<Coordinates | null>;
+  pointResponse$: Observable<NWSPointResponse | null>;
+  forecastResponse$: Observable<NWSForecastResponse | null>;
 
   constructor(
     private weatherDataService: WeatherDataService,
     private nwsApiService: NwsApiService
-  ) { }
-
-  ngOnInit(): void {
-    this.weatherDataService.coordinates$.subscribe((coords) => {
-      this.coordinates = coords;
-    });
-
-    this.weatherDataService.forecast$.subscribe((forecast) => {
-      this.forecastResponse = forecast
-    });
-
-    this.nwsApiService.pointResponse$.subscribe((point) => {
-      this.pointResponse = point;
-      this.forecastUrl = point?.properties.forecast ?? '';
-
-      if (this.forecastUrl) {
-        this.nwsApiService.fetchForecast(this.forecastUrl);
-      }
-    });
+  ) { 
+    this.coordinates$ = this.weatherDataService.coordinates$;
+    this.pointResponse$ = this.nwsApiService.pointResponse$;
+    this.forecastResponse$ = this.pointResponse$.pipe(
+      filter((point): point is NWSPointResponse => !!point && !!point.properties.forecast),
+      switchMap((point) => this.nwsApiService.getForecast(point.properties.forecast))
+    );
   }
+
+  ngOnInit(): void { }
 }

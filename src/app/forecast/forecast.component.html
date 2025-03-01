@@ -1,48 +1,20 @@
-<div class="forecast-container">
-    <h2>Weather Forecast</h2>
-    
-    <div *ngIf="coordinates; else noData">
-      <div *ngIf="forecastResponse; else noForecast">
-        <table class="forecast-table">
-          <thead>
-            <tr>
-              <th>When</th>
-              <th>Date</th>
-              <th>Temperature</th>
-              <th>Precipitation</th>
-              <th>Wind</th>
-              <th>Icon</th>
-              <th>Forecast</th>
-              <th>Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let period of forecastResponse.properties.periods">
-              <td>{{ period.name }}</td>
-              <td>{{ period.startTime | date:'MM/dd/yyyy' }}</td>
-              <td>{{ period.temperature }} {{ period.temperatureUnit }}</td>
-              <td>
-                {{ period.probabilityOfPrecipitation.value !== null ? (period.probabilityOfPrecipitation.value + '%') : 'N/A' }}
-              </td>
-              <td>{{ period.windSpeed }} {{ period.windDirection }}</td>
-              <td>
-                <img [src]="period.icon" alt="Weather Icon" width="50">
-              </td>
-              <td>{{ period.shortForecast }}</td>
-              <td>{{ period.detailedForecast }}</td>
-            </tr>
-          </tbody>
-        </table>
-        
+<div class="forecast-container" *ngIf="forecastResponse$ | async as forecast">
+  <h2>Detailed Forecast</h2>
+  <div class="forecast-cards">
+    <div class="forecast-card" *ngFor="let period of forecast.properties.periods">
+      <div class="card-header">
+        <h3>{{ period.name }}</h3>
+        <p>{{ period.startTime | date:'MM/dd/yyyy' }}</p>
+      </div>
+      <div class="card-body">
+        <img [src]="period.icon" alt="{{ period.shortForecast }}" class="forecast-icon">
+        <p class="short-forecast">{{ period.shortForecast }}</p>
+        <p class="temperature">Temp: {{ period.temperature }} {{ period.temperatureUnit }}</p>
+        <p class="wind">Wind: {{ period.windSpeed }} {{ period.windDirection }}</p>
+      </div>
+      <div class="card-footer">
+        <p>{{ period.detailedForecast }}</p>
       </div>
     </div>
-    
-    <ng-template #noData>
-      <p>No coordinates available. Please perform a search first.</p>
-    </ng-template>
-
-    <ng-template #noForecast>
-      <p>No forecast available.</p>
-    </ng-template>
   </div>
-  
+</div>

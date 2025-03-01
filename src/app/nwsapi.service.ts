@@ -23,7 +23,6 @@ export class NwsApiService {
   }
 
   fetchForecastPoint({ lat, lon }: { lat: string; lon: string; }): void {
-    console.log(`Lat: ${lat}, Lon: ${lon}`);
     this.getPoint(lat, lon).subscribe({
       next: (result: NWSPointResponse) => {
         this._pointResponse.next(result);
@@ -31,17 +30,6 @@ export class NwsApiService {
       error: (error: any) => {
         console.error('Error fetching coordinates: ', error);
         this._pointResponse.next(null);
-      }
-    });
-  }
-
-  fetchForecast(url: string): void {
-    this.getForecast(url).subscribe({
-      next: (result: NWSForecastResponse) => {
-        this.weatherDataService.setForecast(result);
-      },
-      error: (error: any) => {
-        console.error('Error fetching forecast: ', error);
       }
     });
   }
