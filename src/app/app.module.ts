@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { SearchComponent } from './search/search.component';
 import { ForecastComponent } from './forecast/forecast.component';
+import { LandingComponent } from './landing/landing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SearchComponent,
-    ForecastComponent
+    ForecastComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,
