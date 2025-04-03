@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
   selector: 'app-landing',
   standalone: false,
   templateUrl: './landing.component.html',
-  styleUrl: './landing.component.css'
+  styleUrls: ['./landing.component.css']
 })
 export class LandingComponent {
   onCheckWeather() {
