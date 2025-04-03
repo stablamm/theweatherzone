@@ -68,7 +68,7 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {
-            "baseHref": "/the-weather-zone/"
+            "baseHref": "/theweatherzone/"
           }
         },
         "serve": {
