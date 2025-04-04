@@ -3,17 +3,13 @@
 <table *ngIf="results$ | async as results">
     <thead>
         <tr>
-            <th>Display Name</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Action</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let result of results">
-            <td>{{ result.display_name }}</td>
-            <td>{{ result.lat }}</td>
-            <td>{{ result.lon }}</td>
+            <td>{{ formatDisplayName(result.display_name) }}</td>
             <td><button (click)="onActionButtonClick(result)">Get Weather</button></td>
         </tr>
     </tbody>

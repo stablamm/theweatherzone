@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, filter } from 'rxjs';
+import { GeocodingResult } from './interfaces/geocoding-result.modal';
 
-export interface GeocodingResult {
-  lat: string;
-  lon: string;
-  display_name: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +23,16 @@ export class GeocodingService {
   fetchAndStoreCoordinates(city: string): void {
     this.getCoordinates(city).subscribe({
       next: (results: GeocodingResult[]) => {
-        this._results.next(results);
+        let filteredResults = [];
+        for (const result of results) {
+          var split = result.display_name.split(',');
+          console.log(split[split.length - 1]);
+          console.log(split);
+          if (split[split.length - 1].trim() === 'United States') {
+            filteredResults.push(result);
+          }
+        }
+        this._results.next(filteredResults);
       },
       error: (error: any) => {
         console.error('Error fetching coordinates: ', error);

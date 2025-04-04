@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GeocodingService, GeocodingResult } from '../geocoding.service';
-import { WeatherDataService } from '../weather-data.service';
+import { GeocodingService } from '../geocoding.service';
 
 @Component({
   selector: 'app-search',
